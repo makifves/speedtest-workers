@@ -1,10 +1,3 @@
-/*
-	LibreSpeed - Worker
-	by Federico Dossena
-	https://github.com/librespeed/speedtest/
-	GNU LGPLv3 License
-*/
-
 // data reported to main thread
 var testState = -1; // -1=not started, 0=starting, 1=download test, 2=ping+jitter test, 3=upload test, 4=finished, 5=abort
 var dlStatus = ""; // download speed in megabit/s with 2 decimal digits
@@ -17,7 +10,7 @@ var dlProgress = 0; //progress of download test 0-1
 var ulProgress = 0; //progress of upload test 0-1
 var pingProgress = 0; //progress of ping+jitter test 0-1
 var testId = null; //test ID (sent back by telemetry if used, null otherwise)
-let dlurl='https://tesla-cdn.thron.com/static/9KYQO2_08_Autopilot_SX_USA._ABQA96.mp4' //下载测速用的测速文件
+let dlurl='https://cdimage.ubuntu.com/ubuntustudio/releases/noble/release/ubuntustudio-24.04-dvd-amd64.iso'
 let emptyurl='/empty?'
 
 var log = ""; //telemetry log
@@ -52,7 +45,7 @@ var settings = {
 	url_ul: "empty", // path to an empty file, used for upload test. must be relative to this js file
 	url_ping: "empty", // path to an empty file, used for ping test. must be relative to this js file
 	url_getIp: "getIP", // path to getIP.php relative to this js file, or a similar thing that outputs the client's ip
-	getIp_ispInfo: true, //if set to true, the server will include ISP info with the IP address
+	getIp_ispInfo: false, //if set to true, the server will include ISP info with the IP address
 	getIp_ispInfo_distance: "km", //km or mi=estimate distance from server in km/mi; set to false to disable distance estimation. getIp_ispInfo must be enabled in order for this to work
 	xhr_dlMultistream: 6, // number of download streams to use (can be different if enable_quirks is active)
 	xhr_ulMultistream: 3, // number of upload streams to use (can be different if enable_quirks is active)
@@ -306,7 +299,7 @@ function getIp(done) {
 		try {
 			var data = JSON.parse(xhr.response)
 			
-			clientIp = `${data.ip} ${data.isp} ${data.country} `
+			clientIp = `${data.ip} ${data.org} ${data.country} `
 			ispInfo = data.rawIspInfo;
 		} catch (e) {
 			clientIp = xhr.responseText;
@@ -319,7 +312,7 @@ function getIp(done) {
 		tlog("getIp failed, took " + (new Date().getTime() - startT) + "ms");
 		done();
 	};
-	xhr.open("GET", 'https://api.ip.sb/geoip', true);
+	xhr.open("GET", 'https://ip.makifves.com', true);
 	xhr.send();
 }
 // download test, calls done function when it's over
@@ -610,7 +603,7 @@ function pingTest(done) {
 		xhr[0] = new XMLHttpRequest();
 		xhr[0].onload = function() {
 			let _colo=xhr[0].getResponseHeader('cf-ray')
-			colo='CF出口地址: '+_colo.split('-')[1]
+			colo='CF: '+_colo.split('-')[1]
 		
 			// pong
 			tverb("pong");

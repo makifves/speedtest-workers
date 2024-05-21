@@ -2,9 +2,9 @@ import { getAssetFromKV } from "@cloudflare/kv-asset-handler";
 const u='admin'
 const p='password'
 let cacheControl = {
-	browserTTL:  null, // do not set cache control ttl on responses
-	edgeTTL: 2 * 60 * 60 * 24, // 2 days
-	bypassCache: true, // do not bypass Cloudflare's cache
+    browserTTL:  null, // do not set cache control ttl on responses
+    edgeTTL: 2 * 60 * 60 * 24, // 2 days
+    bypassCache: true, // do not bypass Cloudflare's cache
 }
 
 async function authhandle(request) {
